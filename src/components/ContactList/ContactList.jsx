@@ -1,24 +1,21 @@
-import { Button, Contact, List } from './ContsctList.styled';
+import { Button, Contact, ContactsWrapper, List } from './ContsctList.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from 'redux/Contacts/contactsSlice';
+import { deleteContact } from 'redux/Operations';
+import { selectVisibleContatcs } from 'redux/Selectors';
 
 export const ContactList = () => {
-  const { contacts } = useSelector(state => state.contacts);
-  const { filter } = useSelector(state => state.filter);
-
+  const visibleContacts = useSelector(selectVisibleContatcs);
   const dispatch = useDispatch();
-
-  const normalizedFilter = filter.toLowerCase();
-
-  const visibleContacts = contacts.filter(item =>
-    item.name.toLowerCase().includes(normalizedFilter)
-  );
 
   return (
     <List>
       {visibleContacts.map(item => (
         <Contact key={item.id}>
-          {item.name}: {item.number}
+          <ContactsWrapper>
+            <img src={item.avatar} alt="avatar" width="50" />
+            {item.name}: {item.number}
+          </ContactsWrapper>
+
           <Button
             type="button"
             id={item.id}

@@ -1,11 +1,18 @@
-import { addContact } from 'redux/Contacts/contactsSlice';
 import { Button, Form, Input, Label } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
+import { fetchContacts, postContact } from 'redux/Operations';
+import { selectContacts } from 'redux/Selectors';
+import { useEffect } from 'react';
 
 export const ContactForm = () => {
-  const { contacts } = useSelector(state => state.contacts);
-  console.log(contacts);
+  const contacts = useSelector(selectContacts);
+  console.log('contacts form', contacts);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -15,10 +22,10 @@ export const ContactForm = () => {
     const normalizedName = name.toLowerCase();
 
     if (isInContacts(normalizedName)) {
-      alert(`${name} is already in Contacts`);
+      toast.error(`${name} is already in Contacts`);
       return;
     }
-    dispatch(addContact({ name, number }));
+    dispatch(postContact({ name, number }));
     form.reset();
   };
 
